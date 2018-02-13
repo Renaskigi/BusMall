@@ -27,6 +27,20 @@ const survey = {
             new DisplayItem('water-can','water-can.jpg', 0, 0, 'reference'),
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
+        const grid = document.getElementById('pictures');
+        grid.addEventListener('click', function() {
+            console.log('pic was clicked', event.target);
+            const alt = event.target.alt;
+            for(let i = 0; i < survey.displayItems.length; i ++) {
+                const products = survey.displayItems[i];
+                if (products.name === alt) {
+                    products.timesClicked++;
+                    console.table(products);
+                }
+            }
+        });
+
+
     },
 
     getRandomDisplayItem: function() {
@@ -47,6 +61,7 @@ const survey = {
             const imageHolder = document.getElementById('pictures');
             const ele = document.createElement('img');
             ele.src = 'images/' + selectedItems[i].imageUrl;
+            ele.setAttribute('alt', selectedItems[i].name);
             imageHolder.appendChild(ele);
             console.log(selectedItems[i]);
         };
