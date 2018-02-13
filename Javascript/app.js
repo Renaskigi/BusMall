@@ -1,7 +1,8 @@
 'use strict';
-
+const selectedItems = [];
 const survey = {
     displayItems: [],
+    surveyClicks: 0,
     start: function () {
 
         this.displayItems.push(
@@ -12,7 +13,7 @@ const survey = {
             new DisplayItem('breakfast','breakfast.jpg', 0, 0, 'reference'),
             new DisplayItem('bubblegum','bubblegum.jpg', 0, 0, 'reference'),
             new DisplayItem('chair','chair.jpg', 0, 0, 'reference'),
-            new DisplayItem('cthulu','cthulu.jpg', 0, 0, 'reference'),
+            new DisplayItem('cthulhu','cthulhu.jpg', 0, 0, 'reference'),
             new DisplayItem('dog-duck','dog-duck.jpg', 0, 0, 'reference'),
             new DisplayItem('dragon','dragon.jpg', 0, 0, 'reference'),
             new DisplayItem('pen','pen.jpg', 0, 0, 'reference'),
@@ -27,25 +28,27 @@ const survey = {
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
     },
-    
+
     getRandomDisplayItem: function() {
-        const selectedItems = [];
-        for (let i = 0; i < 3; i++) {
+        while (selectedItems.length < 3) {
             const randomNumber = Math.floor(Math.random() * this.displayItems.length);
             const numStore = this.displayItems[randomNumber];
-            selectedItems.push(numStore);
+            if (!selectedItems.includes(numStore)) {
+                selectedItems.push(numStore);
+            };
         }
         console.table(selectedItems);
         return selectedItems;
     },
 
     render: function() {
+        this.getRandomDisplayItem();
         for (let i = 0; i < 3; i++) {
             const imageHolder = document.getElementById('pictures');
             const ele = document.createElement('img');
-            ele.src = 'images/' + this.displayItems[i].imageUrl;
+            ele.src = 'images/' + selectedItems[i].imageUrl;
             imageHolder.appendChild(ele);
-            console.log(this.displayItems[i]);
+            console.log(selectedItems[i]);
         };
     }
 };
@@ -60,5 +63,4 @@ function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) 
 
 
 survey.start();
-survey.getRandomDisplayItem();
 survey.render();
