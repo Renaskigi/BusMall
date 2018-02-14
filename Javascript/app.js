@@ -1,7 +1,10 @@
 'use strict';
 let surveyClicks = 0;
+
 const survey = {
     displayItems: [],
+    table: document.getElementById('resultsTable'),
+    grid: document.getElementById('pictures'),
     start: function () {
 
         this.displayItems.push(
@@ -26,25 +29,9 @@ const survey = {
             new DisplayItem('water-can','water-can.jpg', 0, 0, 'reference'),
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
-        const grid = document.getElementById('pictures');
-        grid.addEventListener('click', this.clickHandler);
+        
+        this.grid.addEventListener('click', clickHandler);
 
-    },
-
-    clickHandler: function() {
-        survey.clearTiles();
-        const alt = event.target.alt;
-        for(let i = 0; i < survey.displayItems.length; i ++) {
-            const products = survey.displayItems[i];
-            if (products.name === alt) {
-                products.timesClicked++;
-                console.table(products);
-            }
-        }
-        if (surveyClicks = 25) {
-            survey.next;
-        };
-        survey.render();
     },
 
     getRandomDisplayItem: function() {
@@ -60,16 +47,16 @@ const survey = {
     },
 
     next: function() {
-        grid.removeEventListener ('click', this.clickHandler);
-        const table = document.getElementById('resultsTable');
+        this.grid.removeEventListener ('click', clickHandler());
+        console.log(this.table);
         const h1 = document.createElement('h1');
         h1.textContent = 'Results:';
-        table.appendChild(h1);
+        this.table.appendChild(h1);
 
         for (let i = 0; i < this.displayItems.length; i++){
             const resultsLine = document.createElement('p');
-            resultsLine.textContent = this.displayItems[i].name + ': ' + this.displayItems[i].selections + ' votes.';
-            table.appendChild(resultsLine);
+            resultsLine.textContent = this.displayItems[i].name + ': ' + this.displayItems[i].timesClicked + ' votes.';
+            this.table.appendChild(resultsLine);
         }
     },
 
@@ -82,7 +69,7 @@ const survey = {
             ele.setAttribute('alt', grabReturn[i].name);
             imageHolder.appendChild(ele);
             grabReturn[i].timesShown++;
-            console.log(grabReturn[i]);
+            // console.log(grabReturn[i]);
         }
     },
 
@@ -91,6 +78,24 @@ const survey = {
         surveyClicks++;
     },
 };
+
+function clickHandler() {
+    survey.clearTiles();
+    const alt = event.target.alt;
+    for(let i = 0; i < survey.displayItems.length; i ++) {
+        const products = survey.displayItems[i];
+        if (products.name === alt) {
+            products.timesClicked++;
+            // console.table(products);
+        }
+    }
+    if (surveyClicks < 25) {
+        survey.render();
+    } else if (surveyClicks === 25) {
+        survey.next();
+    };
+};
+
 function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) {
     this.name = name;
     this.imageUrl = imageUrl;
