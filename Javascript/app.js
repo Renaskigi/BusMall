@@ -1,8 +1,7 @@
 'use strict';
-const selectedItems = [];
+let surveyClicks = 0;
 const survey = {
     displayItems: [],
-    surveyClicks: 0,
     start: function () {
 
         this.displayItems.push(
@@ -29,7 +28,7 @@ const survey = {
         );
         const grid = document.getElementById('pictures');
         grid.addEventListener('click', function() {
-            console.log('pic was clicked', event.target);
+            survey.clearTiles();
             const alt = event.target.alt;
             for(let i = 0; i < survey.displayItems.length; i ++) {
                 const products = survey.displayItems[i];
@@ -38,12 +37,14 @@ const survey = {
                     console.table(products);
                 }
             }
+            survey.render();
         });
 
 
     },
 
     getRandomDisplayItem: function() {
+        const selectedItems = [];
         while (selectedItems.length < 3) {
             const randomNumber = Math.floor(Math.random() * this.displayItems.length);
             const numStore = this.displayItems[randomNumber];
@@ -51,20 +52,25 @@ const survey = {
                 selectedItems.push(numStore);
             };
         }
-        console.table(selectedItems);
         return selectedItems;
     },
 
     render: function() {
-        this.getRandomDisplayItem();
+        const grabReturn = this.getRandomDisplayItem();
         for (let i = 0; i < 3; i++) {
             const imageHolder = document.getElementById('pictures');
             const ele = document.createElement('img');
-            ele.src = 'images/' + selectedItems[i].imageUrl;
-            ele.setAttribute('alt', selectedItems[i].name);
+            ele.src = 'images/' + grabReturn[i].imageUrl;
+            ele.setAttribute('alt', grabReturn[i].name);
             imageHolder.appendChild(ele);
-            console.log(selectedItems[i]);
-        };
+            grabReturn[i].timesShown++;
+            console.log(grabReturn[i]);
+        }
+    },
+
+    clearTiles: function () {
+        document.getElementById('pictures').textContent = '';
+        surveyClicks++;
     }
 };
 function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) {
@@ -74,8 +80,6 @@ function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) 
     this.timesClicked = timesClicked;
     this.referenceString = referenceString;
 }
-
-
 
 survey.start();
 survey.render();
