@@ -27,20 +27,24 @@ const survey = {
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
         const grid = document.getElementById('pictures');
-        grid.addEventListener('click', function() {
-            survey.clearTiles();
-            const alt = event.target.alt;
-            for(let i = 0; i < survey.displayItems.length; i ++) {
-                const products = survey.displayItems[i];
-                if (products.name === alt) {
-                    products.timesClicked++;
-                    console.table(products);
-                }
+        grid.addEventListener('click', this.clickHandler);
+
+    },
+
+    clickHandler: function() {
+        survey.clearTiles();
+        const alt = event.target.alt;
+        for(let i = 0; i < survey.displayItems.length; i ++) {
+            const products = survey.displayItems[i];
+            if (products.name === alt) {
+                products.timesClicked++;
+                console.table(products);
             }
-            survey.render();
-        });
-
-
+        }
+        if (surveyClicks = 25) {
+            survey.next;
+        };
+        survey.render();
     },
 
     getRandomDisplayItem: function() {
@@ -53,6 +57,20 @@ const survey = {
             };
         }
         return selectedItems;
+    },
+
+    next: function() {
+        grid.removeEventListener ('click', this.clickHandler);
+        const table = document.getElementById('resultsTable');
+        const h1 = document.createElement('h1');
+        h1.textContent = 'Results:';
+        table.appendChild(h1);
+
+        for (let i = 0; i < this.displayItems.length; i++){
+            const resultsLine = document.createElement('p');
+            resultsLine.textContent = this.displayItems[i].name + ': ' + this.displayItems[i].selections + ' votes.';
+            table.appendChild(resultsLine);
+        }
     },
 
     render: function() {
@@ -71,7 +89,7 @@ const survey = {
     clearTiles: function () {
         document.getElementById('pictures').textContent = '';
         surveyClicks++;
-    }
+    },
 };
 function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) {
     this.name = name;
