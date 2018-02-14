@@ -1,5 +1,5 @@
 'use strict';
-
+let surveyClicks = 0;
 const survey = {
     displayItems: [],
     start: function () {
@@ -12,7 +12,7 @@ const survey = {
             new DisplayItem('breakfast','breakfast.jpg', 0, 0, 'reference'),
             new DisplayItem('bubblegum','bubblegum.jpg', 0, 0, 'reference'),
             new DisplayItem('chair','chair.jpg', 0, 0, 'reference'),
-            new DisplayItem('cthulu','cthulu.jpg', 0, 0, 'reference'),
+            new DisplayItem('cthulhu','cthulhu.jpg', 0, 0, 'reference'),
             new DisplayItem('dog-duck','dog-duck.jpg', 0, 0, 'reference'),
             new DisplayItem('dragon','dragon.jpg', 0, 0, 'reference'),
             new DisplayItem('pen','pen.jpg', 0, 0, 'reference'),
@@ -26,27 +26,51 @@ const survey = {
             new DisplayItem('water-can','water-can.jpg', 0, 0, 'reference'),
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
+        const grid = document.getElementById('pictures');
+        grid.addEventListener('click', function() {
+            survey.clearTiles();
+            const alt = event.target.alt;
+            for(let i = 0; i < survey.displayItems.length; i ++) {
+                const products = survey.displayItems[i];
+                if (products.name === alt) {
+                    products.timesClicked++;
+                    console.table(products);
+                }
+            }
+            survey.render();
+        });
+
+
     },
-    
+
     getRandomDisplayItem: function() {
         const selectedItems = [];
-        for (let i = 0; i < 3; i++) {
+        while (selectedItems.length < 3) {
             const randomNumber = Math.floor(Math.random() * this.displayItems.length);
             const numStore = this.displayItems[randomNumber];
-            selectedItems.push(numStore);
+            if (!selectedItems.includes(numStore)) {
+                selectedItems.push(numStore);
+            };
         }
-        console.table(selectedItems);
         return selectedItems;
     },
 
     render: function() {
+        const grabReturn = this.getRandomDisplayItem();
         for (let i = 0; i < 3; i++) {
             const imageHolder = document.getElementById('pictures');
             const ele = document.createElement('img');
-            ele.src = 'images/' + this.displayItems[i].imageUrl;
+            ele.src = 'images/' + grabReturn[i].imageUrl;
+            ele.setAttribute('alt', grabReturn[i].name);
             imageHolder.appendChild(ele);
-            console.log(this.displayItems[i]);
-        };
+            grabReturn[i].timesShown++;
+            console.log(grabReturn[i]);
+        }
+    },
+
+    clearTiles: function () {
+        document.getElementById('pictures').textContent = '';
+        surveyClicks++;
     }
 };
 function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) {
@@ -57,8 +81,5 @@ function DisplayItem (name, imageUrl,timesShown, timesClicked, referenceString) 
     this.referenceString = referenceString;
 }
 
-
-
 survey.start();
-survey.getRandomDisplayItem();
 survey.render();
