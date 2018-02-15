@@ -29,7 +29,7 @@ const survey = {
             new DisplayItem('water-can','water-can.jpg', 0, 0, 'reference'),
             new DisplayItem('wine-glass','wine-glass.jpg', 0, 0, 'reference')
         );
-        
+
         this.grid.addEventListener('click', clickHandler);
 
     },
@@ -46,19 +46,31 @@ const survey = {
         return selectedItems;
     },
 
+    chartArray: function() {
+        const clicks = [];
+        for (let i = 0; i < this.displayItems.length; i++) {
+            clicks.push(this.displayItems[i].timesClicked);
+            console.log(clicks);
+        }
+        return clicks;
+    },
+
     next: function() {
         this.grid.removeEventListener ('click', clickHandler());
-        console.log(this.table);
-        const h1 = document.createElement('h1');
-        h1.textContent = 'Results:';
-        this.table.appendChild(h1);
-
-        for (let i = 0; i < this.displayItems.length; i++){
-            const resultsLine = document.createElement('p');
-            resultsLine.textContent = this.displayItems[i].name + ': ' + this.displayItems[i].timesClicked + ' votes.';
-            this.table.appendChild(resultsLine);
-        }
+        const myChart = document.getElementById('myChart');
+        const chrtCntxt = myChart.getContext('2d');
+        const chart = new Chart(chrtCntxt, {
+            type: 'bar',
+            data: {
+                labels: ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'],
+                datasets: [{
+                    label: 'Times Clicked',
+                    data: this.chartArray()
+                }],
+            }
+        });
     },
+
 
     render: function() {
         const grabReturn = this.getRandomDisplayItem();
@@ -69,7 +81,6 @@ const survey = {
             ele.setAttribute('alt', grabReturn[i].name);
             imageHolder.appendChild(ele);
             grabReturn[i].timesShown++;
-            // console.log(grabReturn[i]);
         }
     },
 
