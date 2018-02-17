@@ -9,4 +9,4 @@ settingsForm.addEventListener('submit', function () {
         numRounds: numRounds,
     };
     localStorage.setItem('settings', JSON.stringify(settings));
-};
+});

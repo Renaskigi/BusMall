@@ -6,6 +6,8 @@ const survey = {
     table: document.getElementById('resultsTable'),
     grid: document.getElementById('pictures'),
     clicks: [],
+    numProducts: 3,
+    numRounds: 25,
     start: function () {
 
         if (localStorage.getItem('data')) {
@@ -37,6 +39,13 @@ const survey = {
             );
         }
 
+        if (localStorage.getItem('settings')) {
+            const settings = JSON.parse(localStorage.getItem('settings'));
+            console.log('settings are', settings);
+            this.numRounds = settings.numRounds;
+            this.numProducts = settings.numProducts;
+
+        };
 
         this.grid.addEventListener('click', clickHandler);
 
@@ -44,7 +53,7 @@ const survey = {
 
     getRandomDisplayItem: function() {
         const selectedItems = [];
-        while (selectedItems.length < 5) {
+        while (selectedItems.length < this.numProducts) {
             const randomNumber = Math.floor(Math.random() * this.displayItems.length);
             const numStore = this.displayItems[randomNumber];
             if (!selectedItems.includes(numStore)) {
@@ -64,7 +73,7 @@ const survey = {
     },
 
     ending: function() {
-        this.grid.removeEventListener ('click', clickHandler());
+        // this.grid.removeEventListener ('click', clickHandler());
         const myChart = document.getElementById('myChart');
         const chrtCntxt = myChart.getContext('2d');
         const chart = new Chart(chrtCntxt, {
@@ -82,7 +91,7 @@ const survey = {
 
     render: function() {
         const grabReturn = this.getRandomDisplayItem();
-        for (let i = 0; i < this.numProducts.length; i++) {
+        for (let i = 0; i < this.numProducts; i++) {
             const imageHolder = document.getElementById('pictures');
             const ele = document.createElement('img');
             ele.src = 'images/' + grabReturn[i].imageUrl;
@@ -107,9 +116,9 @@ function clickHandler() {
             products.timesClicked++;
         }
     }
-    if (surveyClicks < this.numRounds) {
+    if (surveyClicks < survey.numRounds) {
         survey.render();
-    } else if (surveyClicks === 25) {
+    } else {
         survey.ending();
     };
 };
