@@ -1,11 +1,5 @@
-.class {
-
-}
-/* .box {
-    display: inline-block;
-    width: 20px;
-} */
 img {
-    width: 33%;
+    width: 20%;
+    height: 20%;
     display: inline-block
 }
